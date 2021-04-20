@@ -9,6 +9,9 @@ const firebaseConfig = {
   measurementId: 'G-Z1RY21PLC1'
 }
 
+const SECRET = 'JWT_SECRET'
+
 module.exports = {
-  firebaseConfig
+  firebaseConfig,
+  SECRET
 }
