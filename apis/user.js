@@ -6,8 +6,10 @@ const passport = require('passport')
 const config = require('../config')
 const db = require('../firebase')
 const bcrypt = require('bcrypt')
+require('../passport.js')
 
 router.post('/login', (req, res, next) => {
+  console.log('req', req.body)
   passport.authenticate('local', { session: false }, (err, user, info) => {
     console.log('Login: ', req.body, user, err, info)
     if (err) return next(err)
@@ -47,11 +49,12 @@ router.get('/logout', (req, res) => {
 router.get('/profile',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
-    res.send(req.user)
+    res.status(200).send(req.user)
   })
 
 router.post('/register',
   async (req, res, next) => {
+    console.log('register')
     const { username, password } = req.body
     try {
       const SALT_ROUND = 10
@@ -79,19 +82,6 @@ router.post('/register',
       } else {
         res.status(400).json({ message: 'register fail' })
       }
-    } catch (err) {
-      next(err)
-    }
-  })
-
-router.post('/test',
-  async (req, res, next) => {
-    try {
-      console.log('res', req.body)
-      // const users = await db.collection('users').get()
-      // const allUser = users.docs.map(doc => doc.data())
-      // res.status(200).json({ message: allUser })
-      res.status(200).json({ message: 'OK' })
     } catch (err) {
       next(err)
     }
