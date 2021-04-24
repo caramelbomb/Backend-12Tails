@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../firebase')
+const { getUser } = require('../passport')
 
-router.post('/sale', async (req, res, next) => {
+router.post('/sale', getUser(), async (req, res, next) => {
   const { name, price, detail, salerID } = req.body
   try {
     if (!name || !price || !detail || !salerID) {
@@ -27,7 +28,7 @@ router.post('/sale', async (req, res, next) => {
   }
 })
 
-router.put('/buy', async (req, res, next) => {
+router.put('/buy', getUser(), async (req, res, next) => {
   const { productID, buyerID } = req.body
   try {
     if (!productID || !buyerID) {
@@ -53,7 +54,7 @@ router.put('/buy', async (req, res, next) => {
   }
 })
 
-router.get('/available', async (req, res, next) => {
+router.get('/available', getUser(), async (req, res, next) => {
   try {
     const products = await db.collection('products').get()
     const allProduct = products.docs.map(doc => doc.data())

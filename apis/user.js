@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const cookie = require('cookie')
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const config = require('../config')
@@ -20,12 +19,6 @@ router.post('/login', (req, res, next) => {
     } else { return res.status(400).json(info) }
   })(req, res, next)
 })
-
-router.get('/profile',
-  passport.authenticate('jwt', { session: false }),
-  (req, res, next) => {
-    res.status(200).send(req.user)
-  })
 
 router.post('/register',
   async (req, res, next) => {

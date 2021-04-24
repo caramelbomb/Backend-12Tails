@@ -38,24 +38,37 @@ passport.use(
     } else { return cb(null, false, { message: 'Incorrect user or password.' }) }
   }))
 
-passport.use(
-  new JWTStrategy({
-    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: SECRET
-  },
-  async (jwtPayload, cb) => {
-    try {
-      const users = await db.collection('users').get()
-      const allUser = users.docs.map(doc => doc.data())
-      const index = await checkExistingUser(jwtPayload.username)
-      if (index) {
-        const { username } = allUser[index]
-        return cb(null, { _id: index, username })
-      } else {
-        return cb(null, false)
-      }
-    } catch (error) {
-      return cb(error, false)
+const strategy = new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: SECRET
+},
+async (jwtPayload, cb) => {
+  try {
+    const users = await db.collection('users').get()
+    const allUser = users.docs.map(doc => doc.data())
+    const index = await checkExistingUser(jwtPayload.username)
+    if (index) {
+      const { username } = allUser[index]
+      return cb(null, { _id: index, username })
+    } else {
+      return cb(null, false)
     }
+  } catch (error) {
+    return cb(error, false)
   }
-  ))
+}
+)
+
+const getUser = () => {
+  passport.use('jwt', strategy)
+  return passport.authenticate('jwt', { session: false })
+}
+
+const initialize = () => {
+  return passport.initialize()
+}
+
+module.exports = {
+  getUser,
+  initialize
+}

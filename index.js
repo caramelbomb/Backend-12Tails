@@ -8,6 +8,9 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
+const { initialize } = require('./passport')
+app.use(initialize())
+
 // router
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
