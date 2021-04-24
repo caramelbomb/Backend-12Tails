@@ -34,7 +34,7 @@ passport.use(
       const { username } = allUser[index]
       return cb(null,
         { username, _id: index },
-        { message: 'Logged In Successfully' })
+        { message: 'success' })
     } else { return cb(null, false, { message: 'Incorrect user or password.' }) }
   }))
 

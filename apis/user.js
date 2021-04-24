@@ -42,8 +42,7 @@ router.get('/logout', (req, res) => {
       path: '/'
     })
   )
-  res.statusCode = 200
-  return res.json({ message: 'Logout successful' })
+  return res.status(200).json({ message: 'Logout successful' })
 })
 
 router.get('/profile',
